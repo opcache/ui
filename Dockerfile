@@ -4,8 +4,9 @@ EXPOSE 8000
 
 WORKDIR /source
 COPY package.json ./
+COPY * /opt/ui
 COPY scripts ./scripts
-RUN ./scripts/update-dependencies &&  yarn install && yarn cache clean
+RUN  yarn install && yarn cache clean
 COPY . /source
 ENTRYPOINT ["yarn"]
 CMD ["start","--ssl=false"]
