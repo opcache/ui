@@ -56,7 +56,6 @@
   &.oci { @include oci; }
   &.openstack { @include openstack; }
   &.packet { @include packet; }
-  &.pnap { @include pnap; }
   &.rackspace { @include rackspace; }
   &.vmwarevsphere { @include vmwarevsphere; }
   &.other { @include other; }
@@ -72,7 +71,6 @@
   &.tencenttke { @include tencenttke; }
   &.huaweicce { @include huaweicce; }
   &.oracleoke { @include oracleoke; }
-  &.linodelke { @include linodelke; }
   &.otc { @include otc; }
   &.route53 { @include route53; }
   &.cloudflare { @include cloudflare; }

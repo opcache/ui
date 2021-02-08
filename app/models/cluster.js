@@ -18,36 +18,17 @@ const TRUE = 'True';
 const CLUSTER_TEMPLATE_ID_PREFIX = 'cattle-global-data:';
 const SCHEDULE_CLUSTER_SCAN_QUESTION_KEY = 'scheduledClusterScan.enabled';
 
-export const DEFAULT_USER_DATA =
-`MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
-
---==MYBOUNDARY==
-Content-Type: text/x-shellscript; charset="us-ascii"
-
-#!/bin/bash
-echo "Running custom user data script"
-
---==MYBOUNDARY==--\\`;
-
 export const DEFAULT_NODE_GROUP_CONFIG = {
-  desiredSize:          2,
-  diskSize:             20,
-  ec2SshKey:            '',
-  gpu:                  false,
-  imageId:              null,
-  instanceType:         't3.medium',
-  labels:               {},
-  maxSize:              2,
-  minSize:              2,
-  nodegroupName:        '',
-  requestSpotInstances: false,
-  resourceTags:         {},
-  spotInstanceTypes:    [],
-  subnets:                [],
-  tags:                 {},
-  type:                 'nodeGroup',
-  userData:             DEFAULT_USER_DATA,
+  desiredSize:   2,
+  diskSize:      20,
+  ec2SshKey:     '',
+  gpu:           false,
+  instanceType:  't3.medium',
+  maxSize:       2,
+  minSize:       2,
+  nodegroupName: '',
+  subnets:       [],
+  type:          'nodeGroup',
 };
 
 export const DEFAULT_EKS_CONFIG = {
@@ -306,8 +287,6 @@ export default Resource.extend(Grafana, ResourceUsage, {
       return 'huaweicce';
     case 'okeEngineConfig':
       return 'oracleoke';
-    case 'lkeEngineConfig':
-      return 'linodelke';
     case 'rke2Config':
       return 'rke2';
     case 'rancherKubernetesEngineConfig':
@@ -350,8 +329,6 @@ export default Resource.extend(Grafana, ResourceUsage, {
       return intl.t('clusterNew.oracleoke.shortLabel');
     case 'otccceEngineConfig':
       return intl.t('clusterNew.otccce.shortLabel');
-    case 'lkeEngineConfig':
-      return intl.t('clusterNew.linodelke.shortLabel');
     case 'k3sConfig':
       return intl.t('clusterNew.k3simport.shortLabel');
     case 'rke2Config':
@@ -434,13 +411,7 @@ export default Resource.extend(Grafana, ResourceUsage, {
     const kubernetesVersion = get(this, 'eksStatus.upstreamSpec.kubernetesVersion');
     const nodeGroupVersions = (get(this, 'eksStatus.upstreamSpec.nodeGroups') || []).getEach('version');
 
-    return nodeGroupVersions.any((ngv) => {
-      if (isEmpty(ngv)) {
-        return false;
-      } else {
-        return Semver.lt(Semver.coerce(ngv), Semver.coerce(kubernetesVersion));
-      }
-    });
+    return nodeGroupVersions.any((ngv) => Semver.lt(Semver.coerce(ngv), Semver.coerce(kubernetesVersion)));
   }),
 
 
@@ -512,7 +483,7 @@ export default Resource.extend(Grafana, ResourceUsage, {
         enabled:   this.canSaveAsTemplate,
       },
       {
-        label:     this.eksDisplayEksImport ? 'action.importHost' : 'action.registration',
+        label:     this.eksDisplayEksImport ? 'action.importHost' : 'action.addHost',
         icon:      'icon icon-host',
         action:    'showCommandModal',
         enabled:   this.canShowAddHost,
